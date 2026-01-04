@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import styled from 'styled-components'
+import OpenAI from 'openai';
+
+const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY
 
 const Container = styled.div`
   padding: 2rem;
@@ -66,6 +69,13 @@ function App() {
   const [inputValue, setInputValue] = useState('')
   const [stockTickers, setStockTickers] = useState<string[]>([])
 
+  const openai = new OpenAI({
+    apiKey: OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true
+  })
+
+  console.log(openai.apiKey)
+
   const handleAddTicker = () => {
     if (inputValue.trim() && stockTickers.length < 3) {
       setStockTickers([...stockTickers, inputValue.trim().toUpperCase()])
@@ -75,6 +85,10 @@ function App() {
 
   const handleRemoveTicker = (index: number) => {
     setStockTickers(stockTickers.filter((_, i) => i !== index))
+  }
+
+  const handleGenerateReport = () => {
+    console.log('not implemented yet!!!')
   }
 
   return (
@@ -112,7 +126,7 @@ function App() {
       </TickersContainer>
 
       {stockTickers.length > 0 && (
-        <GenerateButton>
+        <GenerateButton onClick={handleGenerateReport}>
           GENERATE REPORT
         </GenerateButton>
       )}
