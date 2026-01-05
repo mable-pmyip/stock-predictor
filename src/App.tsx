@@ -2,7 +2,11 @@ import { useState } from 'react'
 import OpenAI from 'openai'
 import { format, subDays } from 'date-fns'
 import ReactMarkdown from 'react-markdown'
+import { ThemeProvider, createGlobalStyle } from 'styled-components'
+import Switch from 'react-switch'
 import {
+  AppWrapper,
+  ThemeToggleWrapper,
   Container,
   InputWrapper,
   StyledInput,
@@ -16,15 +20,39 @@ import {
   ReportTitle,
   ReportContainer
 } from './App.styles'
+import { lightTheme, darkTheme } from './theme'
+import myLogo from '../public/app.svg'
 
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY
 const POLYGON_API_KEY = import.meta.env.VITE_POLYGON_API_KEY
+
+const GlobalStyle = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body, #root {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+`
 
 export default function App() {
   const [inputValue, setInputValue] = useState('')
   const [stockTickers, setStockTickers] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [report, setReport] = useState<string | null>(null)
+  const [isDarkMode, setIsDarkMode] = useState(true)
 
   const handleAddTicker = () => {
     if (inputValue.trim() && stockTickers.length < 3) {
@@ -59,7 +87,7 @@ export default function App() {
       messages: [
         {
           role: "system",
-          content: "You are a financial analyst AI assistant. Analyze the provided stock data and generate a report advising on whether to buy or sell the shares based on the data that comes in as a parameter. within 100 words"
+          content: "Analyze the provided stock data and generate a report within 100 words advising on whether to buy or sell"
         },
         {
           role: "user",
@@ -93,12 +121,36 @@ export default function App() {
     }
   }
 
-  return (
-    <Container>
-      <h1>Dodgy Dave's Stock Predictions</h1>
-      <p>Add up to 3 stock tickers below to get a super accurate stock predictions report 👇</p>
+  const toggleTheme = () => {
+    setIsDarkMode(prev => !prev)
+  }
 
-      <InputWrapper>
+  return (
+    <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+      <GlobalStyle />
+      <AppWrapper>
+        <ThemeToggleWrapper>
+          <span>☀︎</span>
+          <Switch
+            checked={isDarkMode}
+            onChange={toggleTheme}
+            onColor="#dcf1e4ff"
+            offColor="#313333ff"
+            checkedIcon={false}
+            uncheckedIcon={false}
+            height={24}
+            width={48}
+            handleDiameter={20}
+          />
+          <span>⏾</span>
+        </ThemeToggleWrapper>
+
+        <Container>
+          <img src={myLogo} alt="Logo" width="200" height="200" />
+          <h1>Kuma's Stock Predictions</h1>
+          <p>Add up to 3 stock tickers below to get a super accurate stock predictions report 👇</p>
+
+          <InputWrapper>
         <StyledInput
           type="text"
           value={inputValue}
@@ -145,6 +197,8 @@ export default function App() {
       <FooterText $marginTop="3rem">
          © This is not real financial advice! 😉
       </FooterText>
-    </Container>
+        </Container>
+      </AppWrapper>
+    </ThemeProvider>
   )
 }
