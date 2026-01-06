@@ -23,8 +23,6 @@ import { lightTheme, darkTheme } from './theme'
 import myLogo from '../public/app.svg'
 import myKuma from '../public/kuma.png'
 
-const POLYGON_API_KEY = import.meta.env.VITE_POLYGON_API_KEY
-
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -66,11 +64,12 @@ export default function App() {
   }
 
   const fetchStockData = async (ticker: string, startDate: string, endDate: string) => {
-    const url = `https://api.polygon.io/v2/aggs/ticker/${ticker}/range/1/day/${startDate}/${endDate}?apiKey=${POLYGON_API_KEY}`
+    const url = `https://polygon-api-worker.mable-pmyip.workers.dev/?ticker=${ticker}&startDate=${startDate}&&endDate=${endDate}`
+    
     const response = await fetch(url)
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch data for ${ticker}`)
+      throw new Error(`Failed to fetch data for ${ticker} from polygon api worker. Status: ${response.status} ${response.statusText}.`)
     }
 
     return response.text()
