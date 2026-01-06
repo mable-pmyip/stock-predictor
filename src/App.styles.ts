@@ -1,4 +1,25 @@
-import styled from 'styled-components'
+import styled, { createGlobalStyle } from 'styled-components'
+
+export const GlobalStyle = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body, #root {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+`
 
 export const AppWrapper = styled.div`
   min-height: 100vh;
@@ -8,15 +29,35 @@ export const AppWrapper = styled.div`
   transition: all 0.3s ease;
 `
 
+export const Header = styled.header`
+  width: 100%;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: ${props => props.theme.body};
+  transition: all 0.3s ease;
+`
+
+export const GitHubLink = styled.a`
+  display: flex;
+  align-items: center;
+  color: ${props => props.theme.text};
+  text-decoration: none;
+  font-size: 1.8rem;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+`
+
 export const ThemeToggleWrapper = styled.div`
-  position: fixed;
-  top: 2rem;
-  right: 2rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
   font-size: 1.5rem;
-  z-index: 1000;
 `
 
 export const Container = styled.div`
@@ -25,6 +66,20 @@ export const Container = styled.div`
   padding: 2rem;
   text-align: center;
   color: ${props => props.theme.text};
+`
+
+export const Logo = styled.img`
+  cursor: pointer;
+  transition: opacity 0.3s ease-in-out;
+`
+
+export const Title = styled.h1`
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+`
+
+export const Subtitle = styled.p`
+  margin-bottom: 0;
 `
 
 export const InputWrapper = styled.div`

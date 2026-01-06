@@ -1,12 +1,18 @@
 import { useState } from 'react'
 import { format, subDays } from 'date-fns'
 import ReactMarkdown from 'react-markdown'
-import { ThemeProvider, createGlobalStyle } from 'styled-components'
+import { ThemeProvider } from 'styled-components'
 import Switch from 'react-switch'
 import {
+  GlobalStyle,
   AppWrapper,
+  Header,
+  GitHubLink,
   ThemeToggleWrapper,
   Container,
+  Logo,
+  Title,
+  Subtitle,
   InputWrapper,
   StyledInput,
   AddButton,
@@ -22,27 +28,6 @@ import {
 import { lightTheme, darkTheme } from './theme'
 import myLogo from '../public/app.svg'
 import myKuma from '../public/kuma.png'
-
-const GlobalStyle = createGlobalStyle`
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  html, body, #root {
-    width: 100%;
-    overflow-x: hidden;
-  }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-      sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-`
 
 export default function App() {
   const [inputValue, setInputValue] = useState('')
@@ -122,34 +107,45 @@ export default function App() {
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
       <GlobalStyle />
       <AppWrapper>
-        <ThemeToggleWrapper>
-          <span>☀︎</span>
-          <Switch
-            checked={isDarkMode}
-            onChange={toggleTheme}
-            onColor="#dcf1e4ff"
-            offColor="#313333ff"
-            checkedIcon={false}
-            uncheckedIcon={false}
-            height={24}
-            width={48}
-            handleDiameter={20}
-          />
-          <span>⏾</span>
-        </ThemeToggleWrapper>
+        <Header>
+          <GitHubLink
+            href="https://github.com/mable-pmyip/stock-predictor"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View source on GitHub"
+          >
+            <svg width="32" height="32" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+          </GitHubLink>
+          <ThemeToggleWrapper>
+            <span>☀︎</span>
+            <Switch
+              checked={isDarkMode}
+              onChange={toggleTheme}
+              onColor="#dcf1e4ff"
+              offColor="#313333ff"
+              checkedIcon={false}
+              uncheckedIcon={false}
+              height={24}
+              width={48}
+              handleDiameter={20}
+            />
+            <span>⏾</span>
+          </ThemeToggleWrapper>
+        </Header>
 
         <Container>
-          <img
+          <Logo
             src={isHovered ? myKuma : myLogo}
             alt="Logo"
             width="200"
             height="200"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            style={{ cursor: 'pointer', transition: 'opacity 0.3s ease-in-out' }}
           />
-          <h1>Kuma's Stock Predictions</h1>
-          <p>Add up to 3 stock tickers below to get a super accurate stock predictions report 👇</p>
+          <Title>Kuma's Stock Predictions</Title>
+          <Subtitle>Add up to 3 stock tickers below to get a super accurate stock predictions report 👇</Subtitle>
 
           <InputWrapper>
         <StyledInput
@@ -166,38 +162,38 @@ export default function App() {
           disabled={stockTickers.length >= 3}
         >
           +
-        </AddButton>
-      </InputWrapper>
+            </AddButton>
+          </InputWrapper>
 
-      <TickersContainer>
-        {stockTickers.map((ticker, index) => (
-          <TickerItem key={index}>
-            <span>{ticker}</span>
-            <RemoveButton onClick={() => handleRemoveTicker(index)}>
-              Remove
-            </RemoveButton>
-          </TickerItem>
-        ))}
-      </TickersContainer>
+          <TickersContainer>
+            {stockTickers.map((ticker, index) => (
+              <TickerItem key={index}>
+                <span>{ticker}</span>
+                <RemoveButton onClick={() => handleRemoveTicker(index)}>
+                  Remove
+                </RemoveButton>
+              </TickerItem>
+            ))}
+          </TickersContainer>
 
-      {stockTickers.length > 0 && (
-        <GenerateButton onClick={handleGenerateReport} disabled={loading}>
-          {loading ? 'GENERATING...' : 'GENERATE REPORT'}
-        </GenerateButton>
-      )}
+          {stockTickers.length > 0 && (
+            <GenerateButton onClick={handleGenerateReport} disabled={loading}>
+              {loading ? 'GENERATING...' : 'GENERATE REPORT'}
+            </GenerateButton>
+          )}
 
-      {report && (
-        <ReportSection>
-          <ReportTitle>Your Report 😜</ReportTitle>
-          <ReportContainer>
-            <ReactMarkdown>{report}</ReactMarkdown>
-          </ReportContainer>
-        </ReportSection>
-      )}
+          {report && (
+            <ReportSection>
+              <ReportTitle>Your Report 😜</ReportTitle>
+              <ReportContainer>
+                <ReactMarkdown>{report}</ReactMarkdown>
+              </ReportContainer>
+            </ReportSection>
+          )}
 
-      <FooterText $marginTop="3rem">
-         © This is not real financial advice! 😉
-      </FooterText>
+          <FooterText $marginTop="3rem">
+            © This is not real financial advice! 😉
+          </FooterText>
         </Container>
       </AppWrapper>
     </ThemeProvider>
