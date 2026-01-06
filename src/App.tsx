@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import OpenAI from 'openai'
 import { format, subDays } from 'date-fns'
 import ReactMarkdown from 'react-markdown'
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
@@ -22,8 +21,8 @@ import {
 } from './App.styles'
 import { lightTheme, darkTheme } from './theme'
 import myLogo from '../public/app.svg'
+import myKuma from '../public/kuma.png'
 
-const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY
 const POLYGON_API_KEY = import.meta.env.VITE_POLYGON_API_KEY
 
 const GlobalStyle = createGlobalStyle`
@@ -53,6 +52,7 @@ export default function App() {
   const [loading, setLoading] = useState(false)
   const [report, setReport] = useState<string | null>(null)
   const [isDarkMode, setIsDarkMode] = useState(true)
+  const [isHovered, setIsHovered] = useState(false)
 
   const handleAddTicker = () => {
     if (inputValue.trim() && stockTickers.length < 3) {
@@ -77,26 +77,20 @@ export default function App() {
   }
 
   const analyzeWithAI = async (tickers: string[], stockData: string[]) => {
-    const client = new OpenAI({
-      apiKey: OPENAI_API_KEY,
-      dangerouslyAllowBrowser: true
+    const url = 'https://openai-api-worker.mable-pmyip.workers.dev/analyze'
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ tickers, stockData })
     })
 
-    const response = await client.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: "Analyze the provided stock data and generate a report within 100 words advising on whether to buy or sell"
-        },
-        {
-          role: "user",
-          content: `Here is the stock data for ${tickers.join(', ')} for the last 30 days:\n\n${stockData.join('\n\n')}\n\nPlease provide a detailed analysis and prediction for these stocks.`
-        }
-      ]
-    })
+    if (!response.ok) {
+      throw new Error('Failed to fetch data from cloudflare worker')
+    }
 
-    return response.choices[0].message.content
+    return response.text()
   }
 
   const handleGenerateReport = async () => {
@@ -146,7 +140,15 @@ export default function App() {
         </ThemeToggleWrapper>
 
         <Container>
-          <img src={myLogo} alt="Logo" width="200" height="200" />
+          <img
+            src={isHovered ? myKuma : myLogo}
+            alt="Logo"
+            width="200"
+            height="200"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            style={{ cursor: 'pointer', transition: 'opacity 0.3s ease-in-out' }}
+          />
           <h1>Kuma's Stock Predictions</h1>
           <p>Add up to 3 stock tickers below to get a super accurate stock predictions report 👇</p>
 
