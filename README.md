@@ -1,73 +1,98 @@
-# React + TypeScript + Vite
+# Kuma's Stock Predictions 📈
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An AI-powered stock analysis application that generates detailed prediction reports for up to 3 stock tickers using real-time market data and OpenAI's GPT-4.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 📊 **Real-Time Stock Data**: Fetches 30-day historical stock data via Polygon API
+- 🤖 **AI-Powered Analysis**: Uses OpenAI GPT-4 to generate comprehensive stock predictions and insights
+- 🎯 **Multi-Ticker Support**: Analyze up to 3 stock tickers simultaneously
+- 🌓 **Theme Toggle**: Switch between light and dark modes
+- 📱 **Responsive Design**: Beautiful UI built with Styled Components
+- 🐻 **Easter Egg**: Hover over the logo to meet Kuma!
 
-## React Compiler
+## How It Works
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. **Enter Stock Tickers**: Add up to 3 stock ticker symbols (e.g., AAPL, GOOGL, MSFT)
+2. **Generate Report**: Click the "Generate Report" button
+3. **Get AI Analysis**: The app fetches the last 30 days of stock data and generates an AI-powered analysis report with predictions
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Frontend**: React 19, TypeScript, Vite, Styled Components
+- **APIs**: 
+  - Polygon API (stock market data)
+  - OpenAI GPT-4 (AI analysis)
+- **Backend**: Cloudflare Workers
+  - `polygon-api-worker`: Fetches stock data
+  - `openai-api-worker`: Processes AI predictions
+- **Date Handling**: date-fns
+- **Markdown Rendering**: react-markdown
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Prerequisites
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js (v18 or higher)
+- npm or yarn
+
+### Installation
+
+1. Install dependencies:
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Start the development server:
+```bash
+npm run dev
 ```
+
+3. Open your browser and navigate to `http://localhost:5173`
+
+## Usage
+
+1. Enter a stock ticker symbol (e.g., AAPL, TSLA, GOOGL)
+2. Press Enter or click the + button to add it
+3. Add up to 3 tickers
+4. Click "GENERATE REPORT" to get AI-powered predictions
+5. Review the detailed analysis report with market insights
+
+## Important Note
+
+⚠️ **This is not real financial advice!** This app is for educational and entertainment purposes only. Always do your own research and consult with financial professionals before making investment decisions.
+
+## Development
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
+### Lint
+
+```bash
+npm run lint
+```
+
+## Deployment
+
+This app is designed to be deployed on Cloudflare Pages:
+
+1. Build the project: `npm run build`
+2. Deploy the `dist` folder to Cloudflare Pages
+
+## License
+
+MIT
+
+## Author
+
+Built with ❤️ by Kuma (and friends)
