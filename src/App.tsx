@@ -61,7 +61,7 @@ export default function App() {
   }
 
   const analyzeWithAI = async (tickers: string[], stockData: string[]) => {
-    const url = 'https://openai-api-worker.mable-pmyip.workers.dev/analyze'
+    const url = 'https://openai-api-worker.mable-pmyip.workers.dev/stock-predictor'
     const response = await fetch(url, {
       method: 'POST',
       headers: {
